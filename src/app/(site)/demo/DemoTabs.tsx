@@ -55,7 +55,7 @@ function Tabs() {
     <section className="bg-shell pb-20 md:pb-28">
       <div className="container-x">
         {/* switch */}
-        <div className="sticky top-[4.5rem] z-30 -mx-1.5 flex justify-center py-4">
+        <div className="flex justify-center pb-8">
           <div className="inline-flex rounded-full border border-line bg-white p-1.5 shadow-sm">
             {(
               [
