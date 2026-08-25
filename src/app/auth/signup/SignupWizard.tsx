@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
+import { setSession } from "@/lib/demoSession";
 
 /* ------------------------------------------------------------------ */
 /* Types & constants                                                   */
@@ -197,7 +198,11 @@ export default function SignupWizard() {
           switch on two-step verification.
         </p>
         <div className="mt-9 flex flex-col justify-center gap-3 sm:flex-row">
-          <Link href="/demo?view=dashboard" className="btn btn-ember">
+          <Link
+            href="/demo?view=dashboard"
+            onClick={() => setSession("pro")}
+            className="btn btn-ember"
+          >
             Preview your dashboard
           </Link>
           <Link href="/home" className="btn btn-ghost">

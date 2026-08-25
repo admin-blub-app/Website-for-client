@@ -47,7 +47,7 @@ export default function SiteFooter() {
                 <a
                   key={s}
                   href="#"
-                  className="rounded-full border border-white/15 px-4 py-2 text-xs font-medium text-white/70 transition-colors hover:border-white/40 hover:text-white"
+                  className="rounded-[2px] border border-white/15 px-4 py-2.5 text-[0.65rem] font-medium tracking-[0.18em] text-white/70 uppercase transition-colors hover:border-white/40 hover:text-white"
                 >
                   {s}
                 </a>

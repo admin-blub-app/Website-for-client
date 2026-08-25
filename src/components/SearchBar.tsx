@@ -19,7 +19,7 @@ export default function SearchBar({ compact = false }: { compact?: boolean }) {
   return (
     <form
       onSubmit={submit}
-      className={`flex w-full flex-col gap-2 rounded-2xl border border-line bg-white p-2 shadow-[0_12px_40px_-16px_rgb(23_20_14/0.18)] sm:flex-row sm:items-center sm:rounded-full ${
+      className={`flex w-full flex-col gap-2 rounded-[3px] border border-line bg-white p-2 shadow-[0_12px_40px_-16px_rgb(18_18_18/0.16)] sm:flex-row sm:items-center ${
         compact ? "" : "sm:p-2.5"
       }`}
     >

@@ -1,9 +1,16 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Logo from "./Logo";
+import {
+  clearSession,
+  getSession,
+  SESSION_EVENT,
+  type DemoSession,
+} from "@/lib/demoSession";
 
 const nav = [
   { href: "/services", label: "Explore services" },
@@ -15,7 +22,9 @@ const nav = [
 export default function SiteHeader() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const [session, setSessionState] = useState<DemoSession | null>(null);
   const pathname = usePathname();
+  const router = useRouter();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -23,6 +32,26 @@ export default function SiteHeader() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  useEffect(() => {
+    const sync = () => setSessionState(getSession());
+    sync();
+    window.addEventListener(SESSION_EVENT, sync);
+    window.addEventListener("storage", sync);
+    return () => {
+      window.removeEventListener(SESSION_EVENT, sync);
+      window.removeEventListener("storage", sync);
+    };
+  }, []);
+
+  function logout() {
+    clearSession();
+    setOpen(false);
+    router.push("/home");
+  }
+
+  const areaHref = session?.role === "pro" ? "/demo?view=dashboard" : "/account";
+  const areaLabel = session?.role === "pro" ? "Dashboard" : "My bookings";
 
   return (
     <header
@@ -35,14 +64,14 @@ export default function SiteHeader() {
       <div className="container-x flex h-[4.5rem] items-center justify-between">
         <Logo />
 
-        <nav className="hidden items-center gap-8 lg:flex">
+        <nav className="hidden items-center gap-9 lg:flex">
           {nav.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className={`text-[0.9375rem] font-medium transition-colors ${
+              className={`text-[0.7rem] font-medium tracking-[0.2em] uppercase transition-colors ${
                 pathname.startsWith(item.href)
-                  ? "text-ink"
+                  ? "text-ink underline decoration-1 underline-offset-8"
                   : "text-stone-warm hover:text-ink"
               }`}
             >
@@ -51,16 +80,47 @@ export default function SiteHeader() {
           ))}
         </nav>
 
-        <div className="hidden items-center gap-3 lg:flex">
-          <Link
-            href="/auth/login"
-            className="text-[0.9375rem] font-medium text-stone-warm transition-colors hover:text-ink"
-          >
-            Log in
-          </Link>
-          <Link href="/auth/signup" className="btn btn-primary !py-3">
-            Join as a creative
-          </Link>
+        <div className="hidden items-center gap-6 lg:flex">
+          {session ? (
+            <>
+              <Link
+                href={areaHref}
+                className="text-[0.7rem] font-medium tracking-[0.2em] text-ink uppercase underline decoration-1 underline-offset-8"
+              >
+                {areaLabel}
+              </Link>
+              <span className="flex items-center gap-2.5">
+                <Image
+                  src={session.avatar}
+                  alt=""
+                  width={30}
+                  height={30}
+                  className="rounded-full"
+                />
+                <span className="text-[0.8rem] font-medium">
+                  {session.name}
+                </span>
+              </span>
+              <button
+                onClick={logout}
+                className="text-[0.7rem] font-medium tracking-[0.2em] text-stone-warm uppercase transition-colors hover:text-ink"
+              >
+                Log out
+              </button>
+            </>
+          ) : (
+            <>
+              <Link
+                href="/auth/login"
+                className="text-[0.7rem] font-medium tracking-[0.2em] text-stone-warm uppercase transition-colors hover:text-ink"
+              >
+                Log in
+              </Link>
+              <Link href="/auth/signup" className="btn btn-primary !py-3.5">
+                Join as a creative
+              </Link>
+            </>
+          )}
         </div>
 
         <button
@@ -97,26 +157,43 @@ export default function SiteHeader() {
                 key={item.href}
                 href={item.href}
                 onClick={() => setOpen(false)}
-                className="rounded-lg px-3 py-3 text-[0.95rem] font-medium text-ink hover:bg-cream"
+                className="px-3 py-3 text-[0.78rem] font-medium tracking-[0.18em] text-ink uppercase hover:bg-cream"
               >
                 {item.label}
               </Link>
             ))}
             <div className="mt-2 flex gap-3 px-3 pb-2">
-              <Link
-                href="/auth/login"
-                onClick={() => setOpen(false)}
-                className="btn btn-ghost flex-1"
-              >
-                Log in
-              </Link>
-              <Link
-                href="/auth/signup"
-                onClick={() => setOpen(false)}
-                className="btn btn-primary flex-1"
-              >
-                Join as a creative
-              </Link>
+              {session ? (
+                <>
+                  <Link
+                    href={areaHref}
+                    onClick={() => setOpen(false)}
+                    className="btn btn-primary flex-1"
+                  >
+                    {areaLabel}
+                  </Link>
+                  <button onClick={logout} className="btn btn-ghost flex-1">
+                    Log out
+                  </button>
+                </>
+              ) : (
+                <>
+                  <Link
+                    href="/auth/login"
+                    onClick={() => setOpen(false)}
+                    className="btn btn-ghost flex-1"
+                  >
+                    Log in
+                  </Link>
+                  <Link
+                    href="/auth/signup"
+                    onClick={() => setOpen(false)}
+                    className="btn btn-primary flex-1"
+                  >
+                    Join as a creative
+                  </Link>
+                </>
+              )}
             </div>
           </div>
         </div>

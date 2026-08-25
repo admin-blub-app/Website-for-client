@@ -40,10 +40,10 @@ export default function HomePage() {
               <span className="eyebrow">The creative marketplace</span>
             </Reveal>
             <Reveal delay={80}>
-              <h1 className="display mt-4 text-[2.75rem] sm:text-6xl lg:text-[4.25rem]">
+              <h1 className="display mt-4 text-[2.6rem] sm:text-6xl lg:text-[4.1rem]">
                 Book brilliant creatives.
                 <br />
-                <span className="text-ember">In minutes.</span>
+                <span className="text-fog">In minutes.</span>
               </h1>
             </Reveal>
             <Reveal delay={160}>
@@ -57,14 +57,16 @@ export default function HomePage() {
               <SearchBar />
             </Reveal>
             <Reveal delay={320}>
-              <div className="mt-5 flex flex-wrap items-center gap-2 text-[0.8rem]">
-                <span className="text-fog">Popular:</span>
+              <div className="mt-5 flex flex-wrap items-center gap-2">
+                <span className="text-[0.68rem] tracking-[0.2em] text-fog uppercase">
+                  Popular
+                </span>
                 {["Photographer", "Logo designer", "Videographer", "Illustrator"].map(
                   (p) => (
                     <Link
                       key={p}
                       href={`/services?q=${encodeURIComponent(p)}`}
-                      className="rounded-full border border-line bg-white px-3.5 py-1.5 font-medium text-soot transition-colors hover:border-ink"
+                      className="rounded-[2px] border border-line bg-white px-3.5 py-2 text-[0.68rem] font-medium tracking-[0.14em] text-soot uppercase transition-colors hover:border-ink"
                     >
                       {p}
                     </Link>
