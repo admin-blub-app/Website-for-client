@@ -269,6 +269,130 @@ export const creatives: Creative[] = [
       },
     ],
   },
+  {
+    slug: "marcus-bell",
+    name: "Marcus Bell",
+    craft: "Event & Concert Photographer",
+    category: "category-1",
+    city: "Nashville, TN",
+    rating: 4.9,
+    reviews: 176,
+    from: 260,
+    image:
+      "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?q=80&w=1400&auto=format&fit=crop",
+    avatar: "https://i.pravatar.cc/160?img=68",
+    tags: ["Concerts", "Festivals", "Nightlife"],
+    bio: "Shooting stages, crowds and green rooms for eight years. Fast turnarounds for artists and venues: highlights the same night, full gallery in 48 hours.",
+    services: [
+      {
+        id: "s1",
+        name: "Show coverage",
+        price: 260,
+        duration: "2 hrs",
+        description: "Full set coverage, 30 edited images, same-night selects.",
+      },
+      {
+        id: "s2",
+        name: "Festival day pass",
+        price: 850,
+        duration: "Full day",
+        description: "Multi-stage coverage with artist and crowd galleries.",
+      },
+    ],
+  },
+  {
+    slug: "ivy-chen",
+    name: "Ivy Chen",
+    craft: "Packaging & Web Designer",
+    category: "category-2",
+    city: "Los Angeles, CA",
+    rating: 4.8,
+    reviews: 92,
+    from: 300,
+    image:
+      "https://images.unsplash.com/photo-1558655146-9f40138edfeb?q=80&w=1400&auto=format&fit=crop",
+    avatar: "https://i.pravatar.cc/160?img=38",
+    tags: ["Packaging", "Web design", "Labels"],
+    bio: "I design packaging people keep and websites people finish. DTC brands mostly: skincare, coffee, spirits. Dielines, mockups and a launch-ready storefront.",
+    services: [
+      {
+        id: "s1",
+        name: "Label & packaging design",
+        price: 300,
+        duration: "1 week",
+        description: "One SKU: dieline, print files and 3D mockups.",
+      },
+      {
+        id: "s2",
+        name: "Landing page design",
+        price: 700,
+        duration: "10 days",
+        description: "Conversion-focused page, developer-ready handoff.",
+      },
+    ],
+  },
+  {
+    slug: "noah-reed",
+    name: "Noah Reed",
+    craft: "Drone & Aerial Photographer",
+    category: "category-1",
+    city: "Austin, TX",
+    rating: 4.7,
+    reviews: 58,
+    from: 240,
+    image:
+      "https://images.unsplash.com/photo-1473968512647-3e447244af8f?q=80&w=1400&auto=format&fit=crop",
+    avatar: "https://i.pravatar.cc/160?img=15",
+    tags: ["Drone", "Real estate", "Aerial video"],
+    bio: "FAA-licensed drone pilot for real estate, construction progress and events. 4K video and stills, flight permissions handled, insured up to $1M.",
+    services: [
+      {
+        id: "s1",
+        name: "Aerial photo package",
+        price: 240,
+        duration: "1 hr",
+        description: "15 edited aerial stills, property or site of your choice.",
+      },
+      {
+        id: "s2",
+        name: "Aerial film",
+        price: 520,
+        duration: "Half day",
+        description: "Cinematic 4K flyover film, color graded, licensed music.",
+      },
+    ],
+  },
+  {
+    slug: "zara-malik",
+    name: "Zara Malik",
+    craft: "Motion & Social Video Editor",
+    category: "category-1",
+    city: "Miami, FL",
+    rating: 4.9,
+    reviews: 143,
+    from: 190,
+    image:
+      "https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?q=80&w=1400&auto=format&fit=crop",
+    avatar: "https://i.pravatar.cc/160?img=41",
+    tags: ["Reels", "Motion graphics", "Editing"],
+    bio: "I turn raw footage into reels that actually get watched. Motion graphics, captions, sound design. Creators and brands send me clips, I send back scroll-stoppers.",
+    services: [
+      {
+        id: "s1",
+        name: "Reel edit pack, 4 videos",
+        price: 190,
+        duration: "3 days",
+        description: "Four edited verticals with captions and sound design.",
+      },
+      {
+        id: "s2",
+        name: "Brand launch video",
+        price: 640,
+        duration: "1 week",
+        description: "60-second hero video with motion graphics package.",
+      },
+    ],
+  },
 ];
 
 export const testimonials = [
@@ -305,4 +429,105 @@ export function getCreative(slug: string) {
 
 export function creativesInCategory(slug: string) {
   return creatives.filter((c) => c.category === slug);
+}
+
+/* ------------------------------------------------------------------ */
+/* Per-creative portfolio and reviews, derived deterministically       */
+/* ------------------------------------------------------------------ */
+
+const PORTFOLIO_POOLS: Record<string, string[]> = {
+  "category-1": [
+    "https://images.unsplash.com/photo-1493863641943-9b68992a8d07?q=80&w=900&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1502920917128-1aa500764cbd?q=80&w=900&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1542038784456-1ea8e935640e?q=80&w=900&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1452587925148-ce544e77e70d?q=80&w=900&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?q=80&w=900&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?q=80&w=900&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1473968512647-3e447244af8f?q=80&w=900&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?q=80&w=900&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=900&auto=format&fit=crop",
+  ],
+  "category-2": [
+    "https://images.unsplash.com/photo-1561070791-2526d30994b5?q=80&w=900&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1626785774573-4b799315345d?q=80&w=900&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?q=80&w=900&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=900&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1558655146-9f40138edfeb?q=80&w=900&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1513364776144-60967b0f800f?q=80&w=900&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?q=80&w=900&auto=format&fit=crop",
+  ],
+};
+
+const REVIEW_POOL = [
+  {
+    name: "Danielle W.",
+    date: "2 weeks ago",
+    avatar: "https://i.pravatar.cc/80?img=9",
+    text: "Made our whole team feel at ease from the first minute. Delivered ahead of schedule and the results are stunning.",
+  },
+  {
+    name: "Chris O.",
+    date: "1 month ago",
+    avatar: "https://i.pravatar.cc/80?img=61",
+    text: "Scouted everything beforehand and came with a plan. The final work looks like it belongs in a magazine.",
+  },
+  {
+    name: "Priya R.",
+    date: "3 weeks ago",
+    avatar: "https://i.pravatar.cc/80?img=16",
+    text: "Clear communication, fair pricing, zero surprises. Exactly what booking creative work should feel like.",
+  },
+  {
+    name: "Jordan M.",
+    date: "2 months ago",
+    avatar: "https://i.pravatar.cc/80?img=33",
+    text: "Second booking and just as good as the first. Fast turnaround and genuinely fun to work with.",
+  },
+  {
+    name: "Alicia F.",
+    date: "1 week ago",
+    avatar: "https://i.pravatar.cc/80?img=24",
+    text: "Understood the brief instantly and elevated it. We have already booked the next session.",
+  },
+  {
+    name: "Sam K.",
+    date: "6 weeks ago",
+    avatar: "https://i.pravatar.cc/80?img=52",
+    text: "Professional from booking to delivery. The platform made scheduling painless and the work speaks for itself.",
+  },
+];
+
+function seed(s: string) {
+  let h = 0;
+  for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0;
+  return Math.abs(h);
+}
+
+export function portfolioFor(creative: Creative): string[] {
+  const pool = PORTFOLIO_POOLS[creative.category] ?? PORTFOLIO_POOLS["category-1"];
+  const start = seed(creative.slug) % pool.length;
+  const out = [creative.image];
+  for (let i = 0; i < pool.length && out.length < 6; i++) {
+    const img = pool[(start + i) % pool.length];
+    if (!out.includes(img)) out.push(img);
+  }
+  return out;
+}
+
+export function reviewsFor(creative: Creative) {
+  const start = seed(creative.slug) % REVIEW_POOL.length;
+  return [0, 2, 4].map((offset) => {
+    const r = REVIEW_POOL[(start + offset) % REVIEW_POOL.length];
+    return { ...r, text: r.text };
+  });
+}
+
+export function factsFor(creative: Creative) {
+  const h = seed(creative.slug);
+  return {
+    responseTime: ["under 1 hour", "a few hours", "under 2 hours"][h % 3],
+    memberSince: ["2024", "2025", "2026"][h % 3],
+    completed: 40 + (h % 200),
+    repeatRate: 55 + (h % 35),
+  };
 }

@@ -46,7 +46,8 @@ export default async function CategoryPage({
             className="object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-ink/85 via-ink/40 to-ink/10" />
-          <div className="container-x absolute inset-x-0 bottom-0 left-1/2 -translate-x-1/2 pb-10 text-white">
+          <div className="absolute inset-x-0 bottom-0 pb-10 text-white">
+            <div className="container-x">
             <Reveal>
               <nav className="text-xs font-medium text-white/60">
                 <Link href="/services" className="hover:text-white">
@@ -58,6 +59,7 @@ export default async function CategoryPage({
               <h1 className="display mt-3 text-4xl sm:text-6xl">{cat.name}</h1>
               <p className="mt-3 max-w-xl text-white/75">{cat.tagline}.</p>
             </Reveal>
+            </div>
           </div>
         </div>
       </section>

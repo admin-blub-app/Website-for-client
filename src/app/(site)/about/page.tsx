@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import Reveal from "@/components/Reveal";
+import TeamGrid from "./TeamGrid";
 
 export const metadata: Metadata = {
   title: "About us",
@@ -26,13 +27,6 @@ const values = [
     title: "Human support",
     body: "Every booking is backed by a team that answers. If something goes sideways, a person helps, not a form.",
   },
-];
-
-const team = [
-  { name: "Jordan Sole", role: "Founder & CEO", img: "https://i.pravatar.cc/300?img=13" },
-  { name: "Keisha Monroe", role: "Head of Community", img: "https://i.pravatar.cc/300?img=31" },
-  { name: "Andre Silva", role: "Head of Product", img: "https://i.pravatar.cc/300?img=53" },
-  { name: "Lena Fischer", role: "Head of Trust & Safety", img: "https://i.pravatar.cc/300?img=20" },
 ];
 
 const milestones = [
@@ -143,27 +137,7 @@ export default function AboutPage() {
               Work with us
             </Link>
           </Reveal>
-          <div className="mt-12 grid grid-cols-2 gap-6 lg:grid-cols-4">
-            {team.map((m, i) => (
-              <Reveal key={m.name} delay={i * 70}>
-                <div className="group">
-                  <div className="relative aspect-square overflow-hidden rounded-[1.5rem] bg-cream">
-                    <Image
-                      src={m.img}
-                      alt={m.name}
-                      fill
-                      sizes="(max-width: 1024px) 50vw, 25vw"
-                      className="object-cover transition-transform duration-500 group-hover:scale-[1.04]"
-                    />
-                  </div>
-                  <div className="mt-4 text-[0.98rem] font-semibold">
-                    {m.name}
-                  </div>
-                  <div className="text-sm text-stone-warm">{m.role}</div>
-                </div>
-              </Reveal>
-            ))}
-          </div>
+          <TeamGrid />
         </div>
       </section>
 

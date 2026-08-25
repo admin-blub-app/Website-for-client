@@ -2,40 +2,45 @@
 
 import { Suspense, useMemo, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import Stars from "@/components/Stars";
+import { weekFor } from "@/lib/availability";
 import type { Creative, Service } from "@/lib/data";
-
-const SLOTS = ["9:00 AM", "10:30 AM", "1:00 PM", "3:30 PM", "5:00 PM"];
-
-function nextDays(count: number) {
-  const out: { key: string; label: string; day: string }[] = [];
-  const d = new Date();
-  for (let i = 1; i <= count; i++) {
-    const date = new Date(d);
-    date.setDate(d.getDate() + i);
-    out.push({
-      key: date.toISOString().slice(0, 10),
-      label: date.toLocaleDateString("en-US", { month: "short", day: "numeric" }),
-      day: date.toLocaleDateString("en-US", { weekday: "short" }),
-    });
-  }
-  return out;
-}
 
 function Flow({ creative }: { creative: Creative }) {
   const router = useRouter();
   const params = useSearchParams();
-  const days = useMemo(() => nextDays(8), []);
+  const days = useMemo(
+    () => [0, 1, 2, 3].flatMap((w) => weekFor(creative.slug, w)),
+    [creative.slug],
+  );
 
   const preselected =
     creative.services.find((s) => s.id === params.get("service")) ?? null;
 
+  // Slots handed over from the search results calendar.
+  const paramDayIndex = days.findIndex((d) => d.key === params.get("date"));
+  const paramDay = paramDayIndex >= 0 ? days[paramDayIndex] : null;
+  const paramSlot =
+    paramDay && paramDay.slots.includes(params.get("slot") ?? "")
+      ? (params.get("slot") as string)
+      : "";
+
   const [service, setService] = useState<Service | null>(preselected);
-  const [date, setDate] = useState<string>("");
-  const [slot, setSlot] = useState<string>("");
+  const [date, setDate] = useState<string>(paramDay?.key ?? "");
+  const [slot, setSlot] = useState<string>(paramSlot);
+  const [weekOffset, setWeekOffset] = useState(
+    paramDayIndex >= 0 ? Math.floor(paramDayIndex / 5) : 0,
+  );
   const [notes, setNotes] = useState("");
-  const [step, setStep] = useState<1 | 2 | 3>(preselected ? 2 : 1);
+  const [step, setStep] = useState<1 | 2 | 3>(
+    preselected ? (paramSlot ? 3 : 2) : 1,
+  );
+
+  const week = days.slice(weekOffset * 5, weekOffset * 5 + 5);
+  const weekEmpty = week.every((d) => d.slots.length === 0);
+  const maxWeek = Math.floor((days.length - 1) / 5);
 
   const fee = service ? Math.round(service.price * 0.08) : 0;
 
@@ -55,7 +60,7 @@ function Flow({ creative }: { creative: Creative }) {
 
   return (
     <div className="bg-shell pt-[4.5rem]">
-      <div className="container-x grid gap-10 py-12 md:py-16 lg:grid-cols-[1fr_22rem]">
+      <div className="container-x grid gap-10 py-12 md:py-16 lg:grid-cols-[minmax(0,1fr)_21rem]">
         {/* left: flow */}
         <div>
           {/* creative header */}
@@ -72,9 +77,15 @@ function Flow({ creative }: { creative: Creative }) {
               <h1 className="display mt-1 text-3xl sm:text-4xl">
                 {creative.name}
               </h1>
-              <div className="mt-1 flex items-center gap-3 text-sm text-stone-warm">
+              <div className="mt-1 flex flex-wrap items-center gap-3 text-sm text-stone-warm">
                 {creative.craft} · {creative.city}
                 <Stars rating={creative.rating} />
+                <Link
+                  href={`/creatives/${creative.slug}`}
+                  className="text-[0.65rem] font-semibold tracking-[0.12em] text-ink uppercase underline decoration-1 underline-offset-4"
+                >
+                  View full profile
+                </Link>
               </div>
             </div>
           </div>
@@ -138,51 +149,114 @@ function Flow({ creative }: { creative: Creative }) {
               />
               {step === 2 && (
                 <div className="mt-5">
-                  <div className="flex gap-2 overflow-x-auto pb-2">
-                    {days.map((d) => (
-                      <button
-                        key={d.key}
-                        onClick={() => setDate(d.key)}
-                        className={`min-w-[4.5rem] rounded-xl border px-3 py-3 text-center transition-colors ${
-                          date === d.key
-                            ? "border-ink bg-ink text-white"
-                            : "border-line bg-white hover:border-ink"
-                        }`}
-                      >
-                        <div className="text-[0.68rem] font-medium opacity-70">
-                          {d.day}
-                        </div>
-                        <div className="mt-0.5 text-sm font-semibold">
-                          {d.label}
-                        </div>
-                      </button>
-                    ))}
+                  {/* week navigation */}
+                  <div className="flex items-center justify-between">
+                    <button
+                      onClick={() => setWeekOffset((w) => Math.max(0, w - 1))}
+                      disabled={weekOffset === 0}
+                      aria-label="Previous days"
+                      className="grid size-9 place-items-center rounded-[2px] border border-line text-soot transition-colors hover:border-ink disabled:cursor-not-allowed disabled:opacity-30"
+                    >
+                      <svg viewBox="0 0 24 24" className="size-4" fill="none" aria-hidden>
+                        <path d="M15 6l-6 6 6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    </button>
+                    <span className="text-[0.68rem] font-semibold tracking-[0.2em] text-stone-warm uppercase">
+                      {week[0]?.label} – {week[4]?.label}
+                    </span>
+                    <button
+                      onClick={() =>
+                        setWeekOffset((w) => Math.min(maxWeek, w + 1))
+                      }
+                      disabled={weekOffset >= maxWeek}
+                      aria-label="Next days"
+                      className="grid size-9 place-items-center rounded-[2px] border border-line text-soot transition-colors hover:border-ink disabled:cursor-not-allowed disabled:opacity-30"
+                    >
+                      <svg viewBox="0 0 24 24" className="size-4" fill="none" aria-hidden>
+                        <path d="M9 6l6 6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    </button>
                   </div>
-                  {date && (
-                    <div className="mt-4 flex flex-wrap gap-2">
-                      {SLOTS.map((s) => (
-                        <button
-                          key={s}
-                          onClick={() => setSlot(s)}
-                          className={`rounded-full border px-4 py-2.5 text-sm font-medium transition-colors ${
-                            slot === s
-                              ? "border-ember bg-ember text-white"
-                              : "border-line bg-white hover:border-ink"
+
+                  {/* day columns with slots */}
+                  <div className="mt-4 grid grid-cols-5 gap-2">
+                    {week.map((d) => (
+                      <div key={d.key} className="min-w-0">
+                        <div
+                          className={`rounded-[3px] border px-1 py-2.5 text-center ${
+                            date === d.key
+                              ? "border-ink bg-ink text-white"
+                              : d.slots.length === 0
+                                ? "border-line opacity-45"
+                                : "border-line"
                           }`}
                         >
-                          {s}
-                        </button>
-                      ))}
+                          <div className="text-[0.62rem] font-medium tracking-[0.1em] uppercase opacity-70">
+                            {d.day}
+                          </div>
+                          <div className="mt-0.5 text-sm font-semibold">
+                            {d.label}
+                          </div>
+                        </div>
+                        <div className="mt-2 space-y-1.5">
+                          {d.slots.length === 0 ? (
+                            <div className="py-2 text-center text-[0.72rem] text-fog">
+                              —
+                            </div>
+                          ) : (
+                            d.slots.map((s) => {
+                              const active = date === d.key && slot === s;
+                              return (
+                                <button
+                                  key={s}
+                                  onClick={() => {
+                                    setDate(d.key);
+                                    setSlot(s);
+                                  }}
+                                  className={`w-full rounded-[2px] py-2 text-[0.78rem] font-medium transition-colors ${
+                                    active
+                                      ? "bg-ink text-white"
+                                      : "bg-cream text-ink hover:bg-ink hover:text-white"
+                                  }`}
+                                >
+                                  {s}
+                                </button>
+                              );
+                            })
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {weekEmpty && (
+                    <div className="mt-4 rounded-[3px] bg-cream px-4 py-3 text-center text-sm text-stone-warm">
+                      Fully booked these days. Try the next week.
                     </div>
                   )}
-                  {date && slot && (
-                    <button
-                      onClick={() => setStep(3)}
-                      className="btn btn-primary mt-6"
-                    >
-                      Continue
-                    </button>
-                  )}
+
+                  <div className="mt-6 flex items-center justify-between gap-4">
+                    <span className="text-sm text-stone-warm">
+                      {date && slot && dateLabel ? (
+                        <>
+                          Selected:{" "}
+                          <span className="font-semibold text-ink">
+                            {dateLabel.day}, {dateLabel.label} · {slot}
+                          </span>
+                        </>
+                      ) : (
+                        "Pick any time that works for you."
+                      )}
+                    </span>
+                    {date && slot && (
+                      <button
+                        onClick={() => setStep(3)}
+                        className="btn btn-primary"
+                      >
+                        Continue
+                      </button>
+                    )}
+                  </div>
                 </div>
               )}
             </section>

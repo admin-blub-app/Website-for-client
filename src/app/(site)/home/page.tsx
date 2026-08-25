@@ -53,7 +53,7 @@ export default function HomePage() {
                 securely. No DMs, no ghosting, no guesswork.
               </p>
             </Reveal>
-            <Reveal delay={240} className="mt-9 max-w-2xl">
+            <Reveal delay={240} className="relative z-30 mt-9 max-w-2xl">
               <SearchBar />
             </Reveal>
             <Reveal delay={320}>

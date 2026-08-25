@@ -6,7 +6,7 @@ import Stars from "./Stars";
 export default function CreativeCard({ creative }: { creative: Creative }) {
   return (
     <Link
-      href={`/book/${creative.slug}`}
+      href={`/creatives/${creative.slug}`}
       className="card card-hover group block overflow-hidden"
     >
       <div className="relative aspect-[4/3] overflow-hidden bg-cream">
