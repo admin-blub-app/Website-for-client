@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import AvailabilityGrid from "@/components/AvailabilityGrid";
+import PortfolioGallery from "@/components/PortfolioGallery";
 import Stars from "@/components/Stars";
 import {
   creatives,
@@ -154,24 +155,18 @@ export default async function CreativeProfilePage({
 
             {/* portfolio */}
             <div className="hairline mt-10 pt-9">
-              <SectionTitle>Selected work</SectionTitle>
-              <div className="mt-5 grid grid-cols-2 gap-2.5 md:grid-cols-3">
-                {portfolio.map((src, i) => (
-                  <div
-                    key={i}
-                    className={`group relative overflow-hidden rounded-[3px] bg-cream ${
-                      i === 0 ? "col-span-2 row-span-2 aspect-square md:aspect-auto" : "aspect-square"
-                    }`}
-                  >
-                    <Image
-                      src={src}
-                      alt={`Work by ${creative.name}`}
-                      fill
-                      sizes="(max-width: 768px) 50vw, 33vw"
-                      className="object-cover transition-transform duration-500 group-hover:scale-[1.04]"
-                    />
-                  </div>
-                ))}
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <SectionTitle>Selected work</SectionTitle>
+                <span className="text-xs text-fog">
+                  Click any piece to view it full screen
+                </span>
+              </div>
+              <div className="mt-5">
+                <PortfolioGallery
+                  images={portfolio}
+                  name={creative.name}
+                  featured
+                />
               </div>
             </div>
 

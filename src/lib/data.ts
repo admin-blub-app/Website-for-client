@@ -435,26 +435,76 @@ export function creativesInCategory(slug: string) {
 /* Per-creative portfolio and reviews, derived deterministically       */
 /* ------------------------------------------------------------------ */
 
-const PORTFOLIO_POOLS: Record<string, string[]> = {
+export type PortfolioItem = { src: string; caption: string };
+
+const PORTFOLIO_POOLS: Record<string, PortfolioItem[]> = {
   "category-1": [
-    "https://images.unsplash.com/photo-1493863641943-9b68992a8d07?q=80&w=900&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1502920917128-1aa500764cbd?q=80&w=900&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1542038784456-1ea8e935640e?q=80&w=900&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1452587925148-ce544e77e70d?q=80&w=900&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?q=80&w=900&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?q=80&w=900&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1473968512647-3e447244af8f?q=80&w=900&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?q=80&w=900&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=900&auto=format&fit=crop",
+    {
+      src: "https://images.unsplash.com/photo-1493863641943-9b68992a8d07?q=80&w=900&auto=format&fit=crop",
+      caption: "Editorial portrait series for an indie magazine",
+    },
+    {
+      src: "https://images.unsplash.com/photo-1502920917128-1aa500764cbd?q=80&w=900&auto=format&fit=crop",
+      caption: "Behind the scenes on a brand campaign shoot",
+    },
+    {
+      src: "https://images.unsplash.com/photo-1542038784456-1ea8e935640e?q=80&w=900&auto=format&fit=crop",
+      caption: "Street style series, downtown on foot",
+    },
+    {
+      src: "https://images.unsplash.com/photo-1452587925148-ce544e77e70d?q=80&w=900&auto=format&fit=crop",
+      caption: "Product detail work for a camera retailer",
+    },
+    {
+      src: "https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?q=80&w=900&auto=format&fit=crop",
+      caption: "Wedding highlight film, private estate",
+    },
+    {
+      src: "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?q=80&w=900&auto=format&fit=crop",
+      caption: "Festival main-stage coverage",
+    },
+    {
+      src: "https://images.unsplash.com/photo-1473968512647-3e447244af8f?q=80&w=900&auto=format&fit=crop",
+      caption: "Aerial survey for a real estate group",
+    },
+    {
+      src: "https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?q=80&w=900&auto=format&fit=crop",
+      caption: "Color grade session for a short film",
+    },
+    {
+      src: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=900&auto=format&fit=crop",
+      caption: "Launch-party coverage for a tech startup",
+    },
   ],
   "category-2": [
-    "https://images.unsplash.com/photo-1561070791-2526d30994b5?q=80&w=900&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1626785774573-4b799315345d?q=80&w=900&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?q=80&w=900&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=900&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1558655146-9f40138edfeb?q=80&w=900&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1513364776144-60967b0f800f?q=80&w=900&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?q=80&w=900&auto=format&fit=crop",
+    {
+      src: "https://images.unsplash.com/photo-1561070791-2526d30994b5?q=80&w=900&auto=format&fit=crop",
+      caption: "Logo exploration for a coffee roaster",
+    },
+    {
+      src: "https://images.unsplash.com/photo-1626785774573-4b799315345d?q=80&w=900&auto=format&fit=crop",
+      caption: "Identity system for a boutique hotel",
+    },
+    {
+      src: "https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?q=80&w=900&auto=format&fit=crop",
+      caption: "Mural commission, restaurant interior",
+    },
+    {
+      src: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=900&auto=format&fit=crop",
+      caption: "Brand workshop with a founding team",
+    },
+    {
+      src: "https://images.unsplash.com/photo-1558655146-9f40138edfeb?q=80&w=900&auto=format&fit=crop",
+      caption: "Packaging suite for a skincare label",
+    },
+    {
+      src: "https://images.unsplash.com/photo-1513364776144-60967b0f800f?q=80&w=900&auto=format&fit=crop",
+      caption: "Illustration series for a stationery brand",
+    },
+    {
+      src: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?q=80&w=900&auto=format&fit=crop",
+      caption: "Rebrand rollout with an in-house team",
+    },
   ],
 };
 
@@ -503,15 +553,41 @@ function seed(s: string) {
   return Math.abs(h);
 }
 
-export function portfolioFor(creative: Creative): string[] {
-  const pool = PORTFOLIO_POOLS[creative.category] ?? PORTFOLIO_POOLS["category-1"];
-  const start = seed(creative.slug) % pool.length;
-  const out = [creative.image];
+// Images are compared by their path (ignoring size params) so a creative's
+// hero image matches its pool entry even at a different resolution.
+function photoId(url: string) {
+  return url.split("?")[0];
+}
+
+export function portfolioFor(creative: Creative): PortfolioItem[] {
+  const pool =
+    PORTFOLIO_POOLS[creative.category] ?? PORTFOLIO_POOLS["category-1"];
+  const everyPool = [
+    ...PORTFOLIO_POOLS["category-1"],
+    ...PORTFOLIO_POOLS["category-2"],
+  ];
+  const h = seed(creative.slug);
+  const city = creative.city.split(",")[0];
+
+  const heroCaption =
+    everyPool.find((p) => photoId(p.src) === photoId(creative.image))
+      ?.caption ?? "Selected client work";
+  const out: PortfolioItem[] = [
+    { src: creative.image, caption: heroCaption },
+  ];
+
+  const start = h % pool.length;
   for (let i = 0; i < pool.length && out.length < 6; i++) {
-    const img = pool[(start + i) % pool.length];
-    if (!out.includes(img)) out.push(img);
+    const item = pool[(start + i) % pool.length];
+    if (!out.some((o) => photoId(o.src) === photoId(item.src)))
+      out.push(item);
   }
-  return out;
+
+  // Ground each caption with a place and a plausible year.
+  return out.map((item, i) => ({
+    src: item.src,
+    caption: `${item.caption} · ${city}, ${2024 + ((h + i) % 3)}`,
+  }));
 }
 
 export function reviewsFor(creative: Creative) {

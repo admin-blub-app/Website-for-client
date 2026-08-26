@@ -5,9 +5,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import AvailabilityGrid from "@/components/AvailabilityGrid";
+import PortfolioGallery from "@/components/PortfolioGallery";
 import Reveal from "@/components/Reveal";
 import Stars from "@/components/Stars";
-import { getCreative } from "@/lib/data";
+import { getCreative, portfolioFor } from "@/lib/data";
 import {
   getSession,
   SESSION_EVENT,
@@ -16,14 +17,7 @@ import {
 
 const demo = getCreative("amara-osei")!;
 
-const portfolio = [
-  "https://images.unsplash.com/photo-1493863641943-9b68992a8d07?q=80&w=900&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1502920917128-1aa500764cbd?q=80&w=900&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1542038784456-1ea8e935640e?q=80&w=900&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1452587925148-ce544e77e70d?q=80&w=900&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?q=80&w=900&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=900&auto=format&fit=crop",
-];
+const portfolio = portfolioFor(demo);
 
 const reviews = [
   {
@@ -485,22 +479,14 @@ function CreativePage({ profile }: { profile: Profile }) {
         </div>
 
         <div className="hairline mt-10 pt-9">
-          <SectionTitle>Portfolio</SectionTitle>
-          <div className="mt-5 grid grid-cols-2 gap-2.5 md:grid-cols-3">
-            {portfolio.map((src, i) => (
-              <div
-                key={i}
-                className="group relative aspect-square overflow-hidden rounded-[3px] bg-cream"
-              >
-                <Image
-                  src={src}
-                  alt={`Portfolio piece ${i + 1}`}
-                  fill
-                  sizes="(max-width: 768px) 50vw, 25vw"
-                  className="object-cover transition-transform duration-500 group-hover:scale-[1.05]"
-                />
-              </div>
-            ))}
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <SectionTitle>Portfolio</SectionTitle>
+            <span className="text-xs text-fog">
+              Click any piece to view it full screen
+            </span>
+          </div>
+          <div className="mt-5">
+            <PortfolioGallery images={portfolio} name={profile.name} />
           </div>
         </div>
 
